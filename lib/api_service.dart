@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:unique_identifier/unique_identifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
@@ -70,18 +69,18 @@ class ApiService {
   }
 
   Future<String> fetchSoftwareLink(int linkID) async {
-    String? idNumber;
-    try {
-      String? deviceId = await UniqueIdentifier.serial;
-      if (deviceId != null) {
-        final deviceResponse = await checkDeviceId(deviceId);
-        if (deviceResponse['success'] == true) {
-          idNumber = deviceResponse['idNumber'];
-        }
-      }
-    } catch (e) {
-      print("Silent error checking device ID in fetchSoftwareLink: $e");
-    }
+    // String? idNumber;
+    // try {
+    //   String? deviceId = await UniqueIdentifier.serial;
+    //   if (deviceId != null) {
+    //     final deviceResponse = await checkDeviceId(deviceId);
+    //     if (deviceResponse['success'] == true) {
+    //       idNumber = deviceResponse['idNumber'];
+    //     }
+    //   }
+    // } catch (e) {
+    //   print("Silent error checking device ID in fetchSoftwareLink: $e");
+    // }
 
     for (int attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -95,9 +94,9 @@ class ApiService {
             if (data.containsKey("softwareLink")) {
               String relativePath = data["softwareLink"];
               String fullUrl = Uri.parse(apiUrl).resolve(relativePath).toString();
-              if (idNumber != null) {
-                fullUrl += "?idNumber=$idNumber";
-              }
+              // if (idNumber != null) {
+              //   fullUrl += "?idNumber=$idNumber";
+              // }
               return _ApiResult(fullUrl, apiUrl);
             } else {
               throw Exception(data["error"] ?? "Invalid response format");
